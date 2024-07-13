@@ -1,21 +1,16 @@
 /**
- * find all canisters that are controlled by a specific controller in a subnet
+ * find all canisters that are controlled by a specific controller principal Id
  */
 const https = require('https');
-
 const domain = 'https://ic-api.internetcomputer.org/api/v3/canisters';
-const subnet = 'bkfrj-6k62g-dycql-7h53p-atvkj-zg4to-gaogh-netha-ptybj-ntsgw-rqe';
 
-const url = `${domain}?subnet_id=${subnet}`;
-const controller = '4sd6s-xg3ws-aaulg-6h7ju-ntyrc-qpyot-lir4s-abk6o-4s5mn-s7jyv-tqe';
+if(process.argv.length < 3) {
+  console.log('Usage: node index.js <controller_id>');
+  process.exit(1);
+}
 
-function findMyCanisters(json, controller) {
-  let myCanisters = json.data.filter(canister => 
-    canister.controllers.some(ctrl => ctrl === controller)
-  );
-  
-  return myCanisters;
-};
+const controller = process.argv[2];
+const url = `${domain}?controller_id=${controller}`;
 
 https.get(url, res => {
   let data = '';
@@ -26,9 +21,7 @@ https.get(url, res => {
   res.on('end', () => {
     try {
       let json = JSON.parse(data);
-      let myCanisters = findMyCanisters(json, controller);
-
-      console.log('Test',myCanisters);
+      console.log('Test',json);
   } catch (error) {
       console.error(error.message);
   };

@@ -21,7 +21,7 @@ https.get(url, res => {
   res.on('end', () => {
     try {
       let json = JSON.parse(data);
-      console.log('Test',json);
+      console.log(json);
   } catch (error) {
       console.error(error.message);
   };
